@@ -17,19 +17,36 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var backCameraIsOn: Boolean = false
         setContentView(R.layout.activity_main)
         if (checkCameraPermission() and checkStoragePermission()){
-            CameraService(getPreview()).startCamera(this)
+            CameraService(getPreview()).startCameraALT(this)
         }
         val btnShot: Button = findViewById(R.id.btn_take_photo)
         btnShot.setOnClickListener {
             saveCurrentDateTime()
         }
+        val changeBtn: ImageButton = findViewById(R.id.changeButton)
+        changeBtn.setOnClickListener {
+            backCameraIsOn = backCameraIsOn != true
+            if (backCameraIsOn)
+            {
+                CameraService(getPreview()).startCamera(this)
+            }
+            else
+            {
+                CameraService(getPreview()).startCameraALT(this)
+            }
+        }
+
+
+
         val btnDate: ImageButton = findViewById(R.id.btn_date)
         btnDate.setOnClickListener {
             val fragment = DateFragment()
             fragment.show(supportFragmentManager, fragment.tag)
         }
+
     }
 
     private fun checkCameraPermission(): Boolean {

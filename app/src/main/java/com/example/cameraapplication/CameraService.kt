@@ -19,6 +19,9 @@ class CameraService(val preview: Preview){
     }
 
     private fun getCameraSelector(): CameraSelector{
+        return CameraSelector.DEFAULT_FRONT_CAMERA
+    }
+    private fun getCameraSelectorAlt(): CameraSelector{
         return CameraSelector.DEFAULT_BACK_CAMERA
     }
 
@@ -32,6 +35,25 @@ class CameraService(val preview: Preview){
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     context as LifecycleOwner, getCameraSelector(), preview, getImageCapture())
+
+            } catch(exc: Exception) {
+                Log.e(TAG, "Use case binding failed", exc)
+            }
+
+        }, ContextCompat.getMainExecutor(context))
+    }
+
+
+
+    fun startCameraALT(context: Context) {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+
+        cameraProviderFuture.addListener({
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            try {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    context as LifecycleOwner, getCameraSelectorAlt(), preview, getImageCapture())
 
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
